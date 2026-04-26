@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#F6F2EB" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#161310" media="(prefers-color-scheme: dark)" />
-<title>Gangetrener</title>
+<title data-i18n="pageTitle">Gangetrener</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -780,7 +780,7 @@ input { font-family: inherit; color: inherit; }
 
   <!-- ============== TOP BAR ============== -->
   <header class="topbar">
-    <button class="icon-btn" id="menuBtn" aria-label="Statistikk">
+    <button class="icon-btn" id="menuBtn" aria-label="Statistikk" data-i18n-aria="menuBtnAria">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="12" width="4" height="8" rx="1"/>
         <rect x="10" y="7" width="4" height="13" rx="1"/>
@@ -789,11 +789,11 @@ input { font-family: inherit; color: inherit; }
     </button>
 
     <div class="chips" id="chips">
-      <span class="chip" id="chipAnswered"><span class="chip-num">0</span><span class="chip-label">besvart</span></span>
-      <span class="chip" id="chipStreak"><span class="chip-num">0</span><span class="chip-label">på rad</span></span>
+      <span class="chip" id="chipAnswered"><span class="chip-num">0</span><span class="chip-label" data-i18n="chipAnswered">besvart</span></span>
+      <span class="chip" id="chipStreak"><span class="chip-num">0</span><span class="chip-label" data-i18n="chipStreak">på rad</span></span>
     </div>
 
-    <button class="icon-btn" id="themeBtn" aria-label="Bytt tema">
+    <button class="icon-btn" id="themeBtn" aria-label="Bytt tema" data-i18n-aria="themeBtnAria">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
       </svg>
@@ -815,17 +815,17 @@ input { font-family: inherit; color: inherit; }
             </svg>
           </div>
           <div>
-            <div class="hero-title">Klar for en ny økt?</div>
+            <div class="hero-title" data-i18n="readyTitle">Klar for en ny økt?</div>
             <div class="hero-sub" id="readySub">10 oppgaver, gangetabellene 1–10</div>
           </div>
           <div class="meta-pills" id="readyPills"></div>
-          <button class="primary-btn" id="startBtn">Start økt</button>
+          <button class="primary-btn" id="startBtn" data-i18n="startBtn">Start økt</button>
         </div>
       </div>
 
       <!-- PLAY SCREEN -->
       <div class="screen" id="playScreen" hidden>
-        <div class="progress" id="progress" aria-label="Fremdrift"></div>
+        <div class="progress" id="progress" aria-label="Fremdrift" data-i18n-aria="progressAria"></div>
         <div class="problem-card" id="problemCard">
           <div class="sparkle-layer" id="sparkles"></div>
           <div class="animal-layer" id="animalLayer"></div>
@@ -850,7 +850,7 @@ input { font-family: inherit; color: inherit; }
           <button class="key" data-key="9">9</button>
           <span class="spacer"></span>
           <button class="key" data-key="0">0</button>
-          <button class="key util" data-key="back" aria-label="Slett siste siffer">⌫</button>
+          <button class="key util" data-key="back" aria-label="Slett siste siffer" data-i18n-aria="backKeyAria">⌫</button>
         </div>
       </div>
 
@@ -868,7 +868,7 @@ input { font-family: inherit; color: inherit; }
             <div class="hero-sub" id="doneSub"></div>
           </div>
           <div class="summary" id="summary"></div>
-          <button class="primary-btn" id="restartBtn">Ny økt</button>
+          <button class="primary-btn" id="restartBtn" data-i18n="restartBtn">Ny økt</button>
         </div>
       </div>
 
@@ -876,35 +876,35 @@ input { font-family: inherit; color: inherit; }
 
     <!-- -------- DASHBOARD VIEW -------- -->
     <section class="view dashboard" id="dashboardView" hidden>
-      <h2 class="dash-title">Statistikk</h2>
+      <h2 class="dash-title" data-i18n="dashTitle">Statistikk</h2>
 
       <div>
-        <div class="section-label" id="statsSectionLabel">Siste økter</div>
+        <div class="section-label" id="statsSectionLabel" data-i18n="statsLastSessions">Siste økter</div>
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-label">Besvart</div>
+            <div class="stat-label" data-i18n="statAnswered">Besvart</div>
             <div class="stat-value" id="statAnswered">0</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Riktig</div>
+            <div class="stat-label" data-i18n="statCorrect">Riktig</div>
             <div class="stat-value" id="statRate">–</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Median svartid</div>
+            <div class="stat-label" data-i18n="statMedian">Median svartid</div>
             <div class="stat-value" id="statMedian">–</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Beste rekke</div>
+            <div class="stat-label" data-i18n="statBestStreak">Beste rekke</div>
             <div class="stat-value" id="statMaxStreak">0</div>
           </div>
         </div>
       </div>
 
       <div>
-        <div class="section-label">Heatmap</div>
+        <div class="section-label" data-i18n="heatmap">Heatmap</div>
         <div class="tabs" role="tablist">
-          <button class="tab active" data-tab="time" role="tab">Svartid</button>
-          <button class="tab" data-tab="accuracy" role="tab">Treffsikkerhet</button>
+          <button class="tab active" data-tab="time" role="tab" data-i18n="tabTime">Svartid</button>
+          <button class="tab" data-tab="accuracy" role="tab" data-i18n="tabAccuracy">Treffsikkerhet</button>
         </div>
         <div style="height:10px"></div>
         <div class="heatmap-wrap">
@@ -918,12 +918,19 @@ input { font-family: inherit; color: inherit; }
       </div>
 
       <div>
-        <div class="section-label">Innstillinger</div>
+        <div class="section-label" data-i18n="settings">Innstillinger</div>
         <div class="settings">
           <div class="setting-row">
             <div>
-              <div class="setting-label">Gangetabeller</div>
-              <div class="setting-desc">Område (standard 1–10)</div>
+              <div class="setting-label" data-i18n="languageLabel">Språk</div>
+              <div class="setting-desc" data-i18n="languageDesc">Vises automatisk fra nettleseren</div>
+            </div>
+            <select class="num-input" id="languageSelect" style="width:auto;min-width:120px"></select>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" data-i18n="tablesLabel">Gangetabeller</div>
+              <div class="setting-desc" data-i18n="tablesDesc">Område (standard 1–10)</div>
             </div>
             <div class="range-inputs">
               <input type="number" min="1" max="12" class="num-input" id="rangeMin" value="1" inputmode="numeric">
@@ -933,34 +940,34 @@ input { font-family: inherit; color: inherit; }
           </div>
           <div class="setting-row">
             <div>
-              <div class="setting-label">Oppgaver per økt</div>
-              <div class="setting-desc">Standard 10</div>
+              <div class="setting-label" data-i18n="sessionSizeLabel">Oppgaver per økt</div>
+              <div class="setting-desc" data-i18n="sessionSizeDesc">Standard 10</div>
             </div>
             <input type="number" min="1" max="50" class="num-input" id="sessionSize" value="10" inputmode="numeric">
           </div>
           <div class="setting-row">
             <div>
-              <div class="setting-label">Vindu for statistikk</div>
-              <div class="setting-desc">Antall siste økter og svar per oppgave (standard 7)</div>
+              <div class="setting-label" data-i18n="statsWindowLabel">Vindu for statistikk</div>
+              <div class="setting-desc" data-i18n="statsWindowDesc">Antall siste økter og svar per oppgave (standard 7)</div>
             </div>
             <input type="number" min="3" max="20" class="num-input" id="statsWindow" value="7" inputmode="numeric">
           </div>
           <div class="setting-row">
             <div>
-              <div class="setting-label">Mørk modus</div>
-              <div class="setting-desc">Tilpasses systemet om du ikke velger</div>
+              <div class="setting-label" data-i18n="darkModeLabel">Mørk modus</div>
+              <div class="setting-desc" data-i18n="darkModeDesc">Tilpasses systemet om du ikke velger</div>
             </div>
-            <button class="toggle" id="themeToggle" aria-pressed="false" aria-label="Mørk modus av/på"></button>
+            <button class="toggle" id="themeToggle" aria-pressed="false" aria-label="Mørk modus av/på" data-i18n-aria="darkModeAria"></button>
           </div>
         </div>
       </div>
 
-      <button class="reset-btn" id="resetBtn">Nullstill all statistikk</button>
+      <button class="reset-btn" id="resetBtn" data-i18n="resetBtn">Nullstill all statistikk</button>
 
       <div class="data-tools">
-        <button class="link-btn" id="exportBtn" title="Last ned statistikk som CSV">Eksporter data</button>
+        <button class="link-btn" id="exportBtn" title="Last ned statistikk som CSV" data-i18n="exportBtn" data-i18n-title="exportBtnTitle">Eksporter data</button>
         <span class="link-divider"></span>
-        <button class="link-btn" id="importBtn" title="Last inn statistikk fra CSV-fil">Importer data</button>
+        <button class="link-btn" id="importBtn" title="Last inn statistikk fra CSV-fil" data-i18n="importBtn" data-i18n-title="importBtnTitle">Importer data</button>
         <input type="file" id="importFile" accept=".csv,text/csv" hidden>
       </div>
     </section>
@@ -968,6 +975,7 @@ input { font-family: inherit; color: inherit; }
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script>
 /* ============================================================
    GANGETRENER — adaptiv gangetabelltrening
@@ -976,6 +984,84 @@ input { font-family: inherit; color: inherit; }
 
 (() => {
   'use strict';
+
+  // ---------- Internasjonalisering ----------
+  const SUPPORTED_LANGS = ['en','no','es','zh','hi','ar','pt','ru','fr','de'];
+  const FALLBACK_LANG = 'en';
+  const LANG_STORAGE_KEY = 'gangetrener_language';
+  const LANG_LABELS = {
+    en: 'English', no: 'Norsk', es: 'Español', zh: '中文', hi: 'हिन्दी',
+    ar: 'العربية', pt: 'Português', ru: 'Русский', fr: 'Français', de: 'Deutsch'
+  };
+  const TRANSLATIONS = (typeof window !== 'undefined' && window.MULTIPLICATION_TRANSLATIONS) || {};
+  let currentLang = FALLBACK_LANG;
+
+  function format(str, params) {
+    if (!params) return str;
+    return String(str).replace(/\{(\w+)\}/g, (_, k) => (k in params ? params[k] : '{'+k+'}'));
+  }
+  function t(key, params) {
+    const dict = TRANSLATIONS[currentLang] || TRANSLATIONS[FALLBACK_LANG];
+    let v = dict[key];
+    if (v == null) v = TRANSLATIONS[FALLBACK_LANG][key];
+    if (v == null) return key;
+    return format(v, params);
+  }
+  function detectBrowserLanguage() {
+    try {
+      const stored = localStorage.getItem(LANG_STORAGE_KEY);
+      if (stored && SUPPORTED_LANGS.includes(stored)) return stored;
+    } catch (_) {}
+    const list = (navigator.languages && navigator.languages.length)
+      ? navigator.languages
+      : [navigator.language || ''];
+    for (const tag of list) {
+      if (!tag) continue;
+      const primary = String(tag).toLowerCase().split('-')[0];
+      if (primary === 'nb' || primary === 'nn') return 'no';
+      if (SUPPORTED_LANGS.includes(primary)) return primary;
+    }
+    return FALLBACK_LANG;
+  }
+  function applyTranslations() {
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      el.setAttribute('aria-label', t(el.dataset.i18nAria));
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      el.setAttribute('title', t(el.dataset.i18nTitle));
+    });
+  }
+  function refreshDynamicTexts() {
+    if (typeof state === 'undefined') return;
+    if (state.session.phase === 'ready') renderReadyScreen();
+    if (state.session.phase === 'complete') renderCompleteScreen();
+    const dash = document.querySelector('#dashboardView');
+    if (dash && !dash.hidden) renderDashboard();
+  }
+  function setLanguage(lang) {
+    if (!SUPPORTED_LANGS.includes(lang)) lang = FALLBACK_LANG;
+    currentLang = lang;
+    try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch (_) {}
+    applyTranslations();
+    refreshDynamicTexts();
+  }
+  function populateLanguageSelect() {
+    const sel = document.querySelector('#languageSelect');
+    if (!sel) return;
+    sel.innerHTML = '';
+    for (const code of SUPPORTED_LANGS) {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = LANG_LABELS[code];
+      sel.appendChild(opt);
+    }
+    sel.value = currentLang;
+  }
 
   // ---------- Konstanter ----------
   const STORAGE_KEY = 'gangetrener_v2';
@@ -1233,10 +1319,12 @@ input { font-family: inherit; color: inherit; }
   }
   function renderReadyScreen() {
     const { rangeMin, rangeMax, sessionSize } = state.settings;
-    $('#readySub').textContent = `${sessionSize} oppgaver, gangetabellene ${rangeMin}–${rangeMax}`;
+    $('#readySub').textContent = t('readySub', { n: sessionSize, lo: rangeMin, hi: rangeMax });
+    const pillTasks = t('pillTasks', { n: `<strong>${sessionSize}</strong>` });
+    const pillTables = t('pillTables', { lo: `<strong>${rangeMin}`, hi: `${rangeMax}</strong>` });
     $('#readyPills').innerHTML = `
-      <span class="meta-pill"><strong>${sessionSize}</strong> oppgaver</span>
-      <span class="meta-pill">Tabellene <strong>${rangeMin}–${rangeMax}</strong></span>
+      <span class="meta-pill">${pillTasks}</span>
+      <span class="meta-pill">${pillTables}</span>
     `;
   }
   function renderProblem({ animate = false } = {}) {
@@ -1381,14 +1469,15 @@ input { font-family: inherit; color: inherit; }
     const c = state.current;
     renderSlots('error-flash');
     $('#problemCard').classList.add('wrong');
-    setFeedback(`<span class="icon">✗</span><span>Fasit: <strong style="color:var(--error);font-family:Manrope,system-ui,sans-serif;font-weight:700;font-feature-settings:'tnum' 1, 'lnum' 1, 'zero' 1">${c.correctAnswer}</strong></span>`, 'err');
+    setFeedback(`<span class="icon">✗</span><span>${t('wrongLabel')} <strong style="color:var(--error);font-family:Manrope,system-ui,sans-serif;font-weight:700;font-feature-settings:'tnum' 1, 'lnum' 1, 'zero' 1">${c.correctAnswer}</strong></span>`, 'err');
     setTimeout(() => {
       c.typed = '';
       c.phase = 'correcting';
       state.locked = false;
       $('#problemCard').classList.remove('wrong');
       renderSlots();
-      setFeedback(`<span class="prompt">Skriv inn <strong>${c.correctAnswer}</strong> for å fortsette</span>`);
+      const prompt = t('wrongPrompt', { answer: `<strong>${c.correctAnswer}</strong>` });
+      setFeedback(`<span class="prompt">${prompt}</span>`);
     }, WRONG_REVEAL_MS);
   }
 
@@ -1468,13 +1557,12 @@ input { font-family: inherit; color: inherit; }
     const rate = s.target ? Math.round(100 * s.correct / s.target) : 0;
     const med = median(s.times);
 
-    let title = 'Godt jobbet!';
-    let sub   = '';
-    if (rate === 100)    { title = 'Perfekt økt!';    sub = 'Alle rett på første forsøk.'; }
-    else if (rate >= 90) { title = 'Nesten perfekt!'; sub = 'Bare en liten skivebom.'; }
-    else if (rate >= 70) { title = 'Godt jobbet!';    sub = 'Solid innsats.'; }
-    else if (rate >= 50) { title = 'Bra øving!';      sub = 'Du er på god vei.'; }
-    else                 { title = 'Fin trening!';    sub = 'Hver økt gjør deg bedre.'; }
+    let title, sub;
+    if (rate === 100)    { title = t('doneTitle100'); sub = t('doneSub100'); }
+    else if (rate >= 90) { title = t('doneTitle90');  sub = t('doneSub90');  }
+    else if (rate >= 70) { title = t('doneTitle70');  sub = t('doneSub70');  }
+    else if (rate >= 50) { title = t('doneTitle50');  sub = t('doneSub50');  }
+    else                 { title = t('doneTitle0');   sub = t('doneSub0');   }
 
     $('#doneTitle').textContent = title;
     $('#doneSub').textContent   = sub;
@@ -1482,10 +1570,10 @@ input { font-family: inherit; color: inherit; }
     const summary = $('#summary');
     summary.innerHTML = '';
     const rows = [
-      { label: 'Riktig på første forsøk', value: `${s.correct} / ${s.target}`, accent: true },
-      { label: 'Andel riktig',            value: `${rate} %` },
-      { label: 'Median svartid',          value: med != null ? (med/1000).toFixed(1) + ' s' : '–' },
-      { label: 'Lengste rekke',           value: String(s.maxStreak) }
+      { label: t('summaryFirstTry'), value: `${s.correct} / ${s.target}`, accent: true },
+      { label: t('summaryAccuracy'), value: `${rate} %` },
+      { label: t('summaryMedian'),   value: med != null ? (med/1000).toFixed(1) + ' ' + t('timeUnitS') : '–' },
+      { label: t('summaryStreak'),   value: String(s.maxStreak) }
     ];
     for (const r of rows) {
       const row = document.createElement('div');
@@ -1523,9 +1611,11 @@ input { font-family: inherit; color: inherit; }
 
     const label = $('#statsSectionLabel');
     if (recent.length === 0) {
-      label.textContent = 'Siste økter';
+      label.textContent = t('statsLastSessions');
+    } else if (recent.length === 1) {
+      label.textContent = t('statsLastSessionsOne');
     } else {
-      label.textContent = `Siste ${recent.length} økt${recent.length === 1 ? '' : 'er'}`;
+      label.textContent = t('statsLastSessionsMany', { n: recent.length });
     }
 
     const totalAnswered = recent.reduce((a, r) => a + (r.answered || 0), 0);
@@ -1602,7 +1692,7 @@ input { font-family: inherit; color: inherit; }
             cell.classList.add('data');
             cell.style.background = timeToColor(s.bestTime);
             cell.textContent = a * b;
-            cell.title = `${a} × ${b} = ${a*b}\nBeste: ${(s.bestTime/1000).toFixed(2)} s\n${s.correct}/${s.attempts} riktig totalt`;
+            cell.title = t('heatmapTooltipTime', { a, b, p: a*b, best: (s.bestTime/1000).toFixed(2), correct: s.correct, attempts: s.attempts });
           } else {
             cell.textContent = a * b;
             cell.style.opacity = inRange ? 1 : 0.45;
@@ -1615,7 +1705,9 @@ input { font-family: inherit; color: inherit; }
             cell.classList.add('data');
             cell.style.background = accuracyToColor(frac);
             cell.textContent = a * b;
-            cell.title = `${a} × ${b} = ${a*b}\n${correctCount} av ${window.length} riktig${window.length < W ? ' (av '+W+' mulige)' : ''}`;
+            cell.title = window.length < W
+              ? t('heatmapTooltipAccuracyLong', { a, b, p: a*b, correct: correctCount, window: window.length, W })
+              : t('heatmapTooltipAccuracyShort', { a, b, p: a*b, correct: correctCount, window: window.length });
           } else {
             cell.textContent = a * b;
             cell.style.opacity = inRange ? 1 : 0.45;
@@ -1629,10 +1721,10 @@ input { font-family: inherit; color: inherit; }
     const lo_ = $('#legendLo'), hi_ = $('#legendHi');
     if (mode === 'time') {
       bar.className = 'hm-gradient time';
-      lo_.textContent = 'raskere'; hi_.textContent = 'tregere';
+      lo_.textContent = t('legendFaster'); hi_.textContent = t('legendSlower');
     } else {
       bar.className = 'hm-gradient accuracy';
-      lo_.textContent = 'færre riktige'; hi_.textContent = 'flere riktige';
+      lo_.textContent = t('legendFewerCorrect'); hi_.textContent = t('legendMoreCorrect');
     }
   }
 
@@ -1715,17 +1807,17 @@ input { font-family: inherit; color: inherit; }
 
   function importCSV(file) {
     const reader = new FileReader();
-    reader.onerror = () => alert('Kunne ikke lese filen.');
+    reader.onerror = () => alert(t('importErrorReadFail'));
     reader.onload = (e) => {
       try {
         const text = String(e.target.result || '');
         const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-        if (lines.length === 0) throw new Error('Tom fil.');
+        if (lines.length === 0) throw new Error(t('importErrorEmpty'));
         const header = splitCsvLine(lines[0]);
         const expected = ['a','b','attempts','correct','bestTime','lastSeen','recent'];
         for (let i = 0; i < expected.length; i++) {
           if (header[i] !== expected[i]) {
-            throw new Error('Filen har ikke riktig format (forventet kolonner: ' + expected.join(', ') + ').');
+            throw new Error(t('importErrorBadFormat'));
           }
         }
         const newStats = {};
@@ -1755,17 +1847,15 @@ input { font-family: inherit; color: inherit; }
           };
           count++;
         }
-        if (count === 0) throw new Error('Fant ingen gyldige rader å importere.');
-        const msg = `Importere statistikk for ${count} oppgave${count === 1 ? '' : 'r'}?` +
-                    (skipped > 0 ? `\n(${skipped} rad${skipped === 1 ? '' : 'er'} ble hoppet over.)` : '') +
-                    `\n\nDette erstatter all nåværende lagret statistikk.`;
+        if (count === 0) throw new Error(t('importErrorNoData'));
+        const msg = t('importConfirm', { count });
         if (!confirm(msg)) return;
         state.stats = newStats;
         state.lastKey = null;
         save();
         renderDashboard();
       } catch (err) {
-        alert('Import feilet: ' + err.message);
+        alert(t('importErrorPrefix') + err.message);
       }
     };
     reader.readAsText(file);
@@ -1865,8 +1955,10 @@ input { font-family: inherit; color: inherit; }
     $('#statsWindow').addEventListener('change', commitStatsWindow);
     $('#statsWindow').addEventListener('blur', commitStatsWindow);
 
+    $('#languageSelect').addEventListener('change', (e) => setLanguage(e.target.value));
+
     $('#resetBtn').addEventListener('click', () => {
-      if (!confirm('Slette all lagret statistikk? Denne handlingen kan ikke angres.')) return;
+      if (!confirm(t('resetConfirm'))) return;
       state.stats = {};
       state.sessionHistory = [];
       state.lastKey = null;
@@ -1895,8 +1987,11 @@ input { font-family: inherit; color: inherit; }
   function init() {
     load();
     clampSettings();
+    currentLang = detectBrowserLanguage();
     applyTheme(state.settings.theme);
     wireEvents();
+    populateLanguageSelect();
+    applyTranslations();
     updateChips();
     state.session.target = state.settings.sessionSize;
     renderReadyScreen();
