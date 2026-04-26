@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="no" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F6F2EB" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#161310" media="(prefers-color-scheme: dark)" />
+<title>Gangetrener</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --bg:            #F6F2EB;
+  --bg-glow:       rgba(200, 92, 69, 0.05);
+  --surface:       #FFFCF7;
+  --surface-2:     #EDE7DC;
+  --key:           #FFFFFF;
+  --key-active:    #F5EFE3;
+  --text:          #2B2520;
+  --text-muted:    #7A716A;
+  --accent:        #C85C45;
+  --accent-soft:   rgba(200, 92, 69, 0.15);
+  --accent-glow:   rgba(200, 92, 69, 0.30);
+  --correct:       #5F8C6C;
+  --correct-bg:    #E5EEE6;
+  --correct-glow:  rgba(95, 140, 108, 0.25);
+  --error:         #B8453A;
+  --error-bg:      #F2DFDA;
+  --border:        rgba(30, 20, 15, 0.08);
+  --shadow-sm:     0 1px 2px rgba(30, 20, 15, 0.04);
+  --shadow-md:     0 2px 10px rgba(30, 20, 15, 0.06);
+  --shadow-lg:     0 10px 30px rgba(30, 20, 15, 0.08);
+  --radius-sm:     12px;
+  --radius-md:     18px;
+  --radius-lg:     24px;
+}
+[data-theme="dark"] {
+  --bg:            #151210;
+  --bg-glow:       rgba(232, 118, 92, 0.06);
+  --surface:       #201C18;
+  --surface-2:     #2A2520;
+  --key:           #2A2520;
+  --key-active:    #352F28;
+  --text:          #F2EBE0;
+  --text-muted:    #8D8379;
+  --accent:        #E8765C;
+  --accent-soft:   rgba(232, 118, 92, 0.18);
+  --accent-glow:   rgba(232, 118, 92, 0.40);
+  --correct:       #8AC39A;
+  --correct-bg:    #2C3832;
+  --correct-glow:  rgba(138, 195, 154, 0.25);
+  --error:         #E07766;
+  --error-bg:      #3C2B28;
+  --border:        rgba(255, 248, 240, 0.08);
+  --shadow-sm:     0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md:     0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-lg:     0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================================
+   RESET + BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  background-image: radial-gradient(ellipse 60% 50% at 50% 0%, var(--bg-glow), transparent 70%);
+  color: var(--text);
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  overflow: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input { font-family: inherit; color: inherit; }
+
+/* ============================================================
+   APP LAYOUT
+   ============================================================ */
+.app {
+  height: 100vh;
+  height: 100dvh;
+  max-width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  gap: 10px;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar { display: flex; align-items: center; gap: 8px; padding: 2px 2px; }
+.icon-btn {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--text);
+  transition: background 0.15s, transform 0.08s;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: var(--surface-2); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn svg { width: 22px; height: 22px; stroke-width: 2; }
+
+.chips { flex: 1; display: flex; gap: 8px; justify-content: center; overflow: hidden; }
+.chip {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 7px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12.5px; white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.chip.pulse { animation: chipPulse 0.5s ease-out; }
+@keyframes chipPulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.08); background: var(--correct-bg); }
+  100% { transform: scale(1); }
+}
+.chip-num {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 36, "SOFT" 30;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+}
+.chip-label { color: var(--text-muted); font-weight: 500; }
+
+/* ============================================================
+   STAGE / VIEWS
+   ============================================================ */
+.stage { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+.view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.view[hidden] { display: none !important; }
+.screen { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.screen[hidden] { display: none !important; }
+
+/* ============================================================
+   PROGRESS DOTS
+   ============================================================ */
+.progress {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(4px, 1.2vw, 7px);
+  padding: 4px 8px;
+  min-height: 16px;
+}
+.dot {
+  width: clamp(7px, 1.8vw, 9px);
+  height: clamp(7px, 1.8vw, 9px);
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  transition: all 0.25s cubic-bezier(.2,1.3,.4,1);
+}
+.dot.filled.correct { background: var(--correct); border-color: var(--correct); transform: scale(1.18); }
+.dot.filled.wrong   { background: var(--error);   border-color: var(--error);   transform: scale(1.18); }
+.dot.current { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+/* ============================================================
+   PROBLEM CARD
+   ============================================================ */
+.problem-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 18px;
+  min-height: 220px;
+  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative; overflow: hidden;
+}
+.problem-card.correct {
+  background: var(--correct-bg);
+  border-color: var(--correct);
+  box-shadow: 0 0 0 4px var(--correct-glow), var(--shadow-md);
+}
+.problem-card.wrong { animation: cardShake 0.38s ease-out; }
+@keyframes cardShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+
+.problem {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1;
+  font-weight: 700;
+  font-size: clamp(52px, 13vw, 80px);
+  letter-spacing: -0.015em;
+  line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.32em;
+  color: var(--text);
+}
+.problem .op {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.7em;
+  transform: translateY(-0.02em);
+}
+.problem.fly-in .operand,
+.problem.fly-in .op { animation: flyIn 0.35s ease-out both; }
+.problem.fly-in .operand:nth-child(1) { animation-delay: 0ms; }
+.problem.fly-in .op:nth-child(2)      { animation-delay: 40ms; }
+.problem.fly-in .operand:nth-child(3) { animation-delay: 80ms; }
+.problem.fly-in .op:nth-child(4)      { animation-delay: 120ms; }
+@keyframes flyIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.answer {
+  display: flex; justify-content: center;
+  gap: clamp(8px, 2vw, 14px);
+  min-height: 84px; align-items: center;
+}
+.slot {
+  width: clamp(58px, 18vw, 74px);
+  height: clamp(72px, 22vw, 88px);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1;
+  font-weight: 700;
+  font-size: clamp(42px, 12vw, 56px);
+  color: var(--text);
+  border: 2px solid transparent;
+  transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  user-select: none;
+}
+.slot.active {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.slot.filled {
+  background: var(--surface);
+  border-color: var(--border);
+  animation: slotFill 0.22s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+}
+@keyframes slotFill {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.slot.correct-flash { background: var(--correct-bg); border-color: var(--correct); color: var(--correct); }
+.slot.error-flash { background: var(--error-bg); border-color: var(--error); color: var(--error); }
+.answer.shake { animation: answerShake 0.35s ease-out; }
+@keyframes answerShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+
+.feedback {
+  display: flex; justify-content: center; align-items: center;
+  gap: 10px;
+  min-height: 26px;
+  font-size: 15px; font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+.feedback .icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  font-size: 16px; font-weight: 700;
+}
+.feedback.ok  { color: var(--correct); }
+.feedback.ok  .icon {
+  background: var(--correct); color: var(--surface);
+  animation: iconPop 0.45s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+.feedback.err { color: var(--error); }
+.feedback.err .icon {
+  background: var(--error); color: var(--surface);
+  animation: iconPop 0.35s ease-out both;
+}
+@keyframes iconPop {
+  0%   { transform: scale(0); }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.feedback .time {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1;
+  font-weight: 600; letter-spacing: -0.005em;
+}
+.feedback .prompt strong {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1;
+  font-weight: 700; color: var(--accent);
+}
+
+/* ============================================================
+   NUMPAD
+   ============================================================ */
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(7px, 1.5vw, 10px);
+  padding: 2px;
+}
+.key {
+  height: clamp(58px, 10vh, 78px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--key);
+  color: var(--text);
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1;
+  font-weight: 600;
+  font-size: clamp(28px, 5vw, 34px);
+  user-select: none; touch-action: manipulation;
+  transition: transform 0.08s cubic-bezier(0.2, 0.9, 0.4, 1), background 0.12s;
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.key:hover:not(:disabled) { background: var(--key-active); }
+.key:active:not(:disabled) { transform: scale(0.93); background: var(--key-active); }
+.key:disabled { opacity: 0.4; cursor: default; }
+.key.util {
+  font-family: 'Manrope', sans-serif;
+  color: var(--text-muted);
+  font-size: 22px; font-weight: 500;
+}
+.numpad .spacer { visibility: hidden; pointer-events: none; }
+
+/* ============================================================
+   READY + COMPLETE CARDS
+   ============================================================ */
+.center-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px 24px 32px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 22px;
+  min-height: 320px;
+  position: relative; overflow: hidden;
+}
+.hero-icon {
+  width: 92px; height: 92px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  animation: heroIn 0.7s cubic-bezier(.2, 1.4, .3, 1) both;
+}
+.hero-icon.ready { background: var(--accent-soft); color: var(--accent); }
+.hero-icon.done  {
+  background: var(--correct-bg); color: var(--correct);
+  box-shadow: 0 0 0 6px var(--correct-glow);
+}
+.hero-icon svg { width: 52px; height: 52px; stroke-width: 2.5; }
+@keyframes heroIn {
+  0%   { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+  60%  { transform: scale(1.1) rotate(3deg);   opacity: 1; }
+  100% { transform: scale(1) rotate(0);        opacity: 1; }
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 144, "SOFT" 40;
+  font-weight: 600;
+  font-size: clamp(32px, 7vw, 40px);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  animation: fadeUp 0.5s ease-out 0.15s both;
+}
+.hero-sub {
+  color: var(--text-muted);
+  font-size: 15px;
+  max-width: 320px;
+  animation: fadeUp 0.5s ease-out 0.25s both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.meta-pills {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.5s ease-out 0.3s both;
+}
+.meta-pill {
+  padding: 8px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.meta-pill strong {
+  color: var(--text);
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 36, "SOFT" 30;
+  font-weight: 600; font-size: 15px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  animation: fadeUp 0.5s ease-out 0.35s both;
+}
+.summary-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+.summary-label { font-size: 13.5px; color: var(--text-muted); font-weight: 500; }
+.summary-value {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.summary-value.accent { color: var(--accent); }
+
+.primary-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 15px 40px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600; font-size: 16px; letter-spacing: 0.01em;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px var(--accent-glow), 0 1px 3px rgba(0,0,0,0.08);
+  transition: transform 0.1s, box-shadow 0.2s;
+  animation: fadeUp 0.5s ease-out 0.45s both;
+  min-width: 160px;
+}
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--accent-glow), 0 2px 4px rgba(0,0,0,0.1);
+}
+.primary-btn:active { transform: scale(0.96); }
+[data-theme="dark"] .primary-btn { color: #1A1613; }
+
+/* ============================================================
+   CONFETTI + SPARKLES
+   ============================================================ */
+.confetti-layer, .sparkle-layer {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden;
+}
+.sparkle-layer { border-radius: inherit; }
+.confetto {
+  position: absolute; top: -14px;
+  width: 7px; height: 11px;
+  border-radius: 1px;
+  opacity: 0;
+}
+.sparkle {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--correct);
+  opacity: 0;
+}
+
+/* Cute animal reward (quick correct answers) */
+.animal-layer {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.animal {
+  position: absolute;
+  right: 6%;
+  top: 14%;
+  font-size: clamp(48px, 11vw, 64px);
+  line-height: 1;
+  transform: translateY(40px) scale(0);
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+  animation: animalPop 1.6s cubic-bezier(.2, 1.5, .4, 1) both;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+@keyframes animalPop {
+  0%   { transform: translateY(40px)  scale(0)    rotate(-15deg); opacity: 0; }
+  14%  { transform: translateY(-10px) scale(1.15) rotate(10deg);  opacity: 1; }
+  28%  { transform: translateY(0)     scale(0.95) rotate(-6deg);  opacity: 1; }
+  42%  { transform: translateY(-4px)  scale(1)    rotate(4deg);   opacity: 1; }
+  55%  { transform: translateY(0)     scale(1)    rotate(0);      opacity: 1; }
+  80%  { transform: translateY(-12px) scale(1)    rotate(0);      opacity: 1; }
+  100% { transform: translateY(-52px) scale(0.85) rotate(0);      opacity: 0; }
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+.dashboard {
+  gap: 16px;
+  overflow-y: auto;
+  padding: 4px 2px 16px;
+}
+.dashboard::-webkit-scrollbar { width: 6px; }
+.dashboard::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
+
+.dash-title {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  padding: 4px 4px 0;
+}
+.section-label {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600; font-size: 12px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 4px 6px;
+  margin-top: 4px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 14px 16px 12px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.stat-value {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  font-weight: 600;
+  font-size: 28px;
+  color: var(--text);
+  margin-top: 2px;
+  letter-spacing: -0.02em;
+}
+.stat-value.muted { color: var(--text-muted); }
+
+/* Segmented tabs */
+.tabs {
+  display: flex;
+  background: var(--surface-2);
+  border-radius: 14px;
+  padding: 4px;
+  gap: 2px;
+  border: 1px solid var(--border);
+}
+.tab {
+  flex: 1;
+  padding: 9px 12px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600; font-size: 13.5px;
+  border-radius: 10px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.heatmap-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.heatmap { display: grid; gap: 4px; }
+.hm-cell {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 500;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-family: 'Manrope', sans-serif;
+  min-width: 0;
+  position: relative;
+}
+.hm-cell.data { color: rgba(30, 20, 15, 0.9); font-weight: 600; }
+[data-theme="dark"] .hm-cell.data { color: rgba(255, 248, 240, 0.92); }
+.hm-head {
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 36, "SOFT" 30;
+  font-weight: 500; font-size: 13px;
+}
+.hm-corner { background: transparent; color: var(--accent); font-family: 'Fraunces', serif; font-weight: 400; }
+
+.hm-legend {
+  display: flex; align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+.hm-gradient {
+  flex: 1; min-width: 120px;
+  height: 10px;
+  border-radius: 5px;
+}
+.hm-gradient.time     { background: linear-gradient(90deg, hsl(140 50% 55%), hsl(70 55% 55%), hsl(25 70% 58%), hsl(5 65% 56%)); }
+.hm-gradient.accuracy { background: linear-gradient(90deg, hsl(5 65% 56%), hsl(40 70% 58%), hsl(90 55% 55%), hsl(140 52% 55%)); }
+
+/* Settings */
+.settings {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 4px 16px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-label { font-size: 14px; color: var(--text); font-weight: 500; }
+.setting-desc  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.range-inputs { display: flex; align-items: center; gap: 8px; }
+.range-inputs span { color: var(--text-muted); font-size: 13px; }
+.num-input {
+  width: 56px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 36, "SOFT" 30;
+  font-size: 17px; font-weight: 600;
+  color: var(--text);
+  background: var(--bg);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.num-input:focus { border-color: var(--accent); }
+
+.toggle {
+  position: relative;
+  width: 46px; height: 26px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  background: var(--surface);
+  border-radius: 50%;
+  top: 2px; left: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+.toggle[aria-pressed="true"] { background: var(--accent); }
+.toggle[aria-pressed="true"]::after { transform: translateX(20px); background: #fff; }
+
+.reset-btn {
+  padding: 13px;
+  background: transparent;
+  color: var(--error);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600; font-size: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--error);
+  transition: background 0.15s;
+  margin-top: 4px;
+}
+.reset-btn:hover { background: var(--error-bg); }
+.reset-btn:active { transform: scale(0.98); }
+
+/* Subtle data export/import row */
+.data-tools {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px 2px;
+  margin-top: -2px;
+}
+.link-btn {
+  color: var(--text-muted);
+  font-family: 'Manrope', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-decoration: underline;
+  text-decoration-color: rgba(127, 113, 100, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+.link-btn:hover {
+  color: var(--text);
+  text-decoration-color: var(--text);
+}
+.link-divider {
+  width: 1px;
+  height: 11px;
+  background: var(--border);
+}
+
+/* ============================================================
+   RESPONSIVE TWEAKS
+   ============================================================ */
+@media (min-width: 480px) {
+  .slot { font-size: 58px; }
+}
+@media (max-height: 680px) {
+  .problem-card { min-height: 180px; padding: 18px 16px; }
+  .problem { font-size: clamp(46px, 11vw, 60px); }
+  .slot { height: 62px; width: 52px; font-size: 38px; }
+  .key { height: 54px; font-size: 26px; }
+  .center-card { min-height: 260px; padding: 28px 20px; gap: 16px; }
+  .hero-icon { width: 72px; height: 72px; }
+  .hero-icon svg { width: 40px; height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ============== TOP BAR ============== -->
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Statistikk">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="12" width="4" height="8" rx="1"/>
+        <rect x="10" y="7" width="4" height="13" rx="1"/>
+        <rect x="17" y="3" width="4" height="17" rx="1"/>
+      </svg>
+    </button>
+
+    <div class="chips" id="chips">
+      <span class="chip" id="chipAnswered"><span class="chip-num">0</span><span class="chip-label">besvart</span></span>
+      <span class="chip" id="chipStreak"><span class="chip-num">0</span><span class="chip-label">på rad</span></span>
+    </div>
+
+    <button class="icon-btn" id="themeBtn" aria-label="Bytt tema">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ============== STAGE ============== -->
+  <div class="stage">
+
+    <!-- -------- PRACTICE VIEW -------- -->
+    <section class="view practice" id="practiceView">
+
+      <!-- READY SCREEN -->
+      <div class="screen" id="readyScreen">
+        <div class="center-card">
+          <div class="hero-icon ready">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <polygon points="7 4 20 12 7 20 7 4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="hero-title">Klar for en ny økt?</div>
+            <div class="hero-sub" id="readySub">10 oppgaver, gangetabellene 1–10</div>
+          </div>
+          <div class="meta-pills" id="readyPills"></div>
+          <button class="primary-btn" id="startBtn">Start økt</button>
+        </div>
+      </div>
+
+      <!-- PLAY SCREEN -->
+      <div class="screen" id="playScreen" hidden>
+        <div class="progress" id="progress" aria-label="Fremdrift"></div>
+        <div class="problem-card" id="problemCard">
+          <div class="sparkle-layer" id="sparkles"></div>
+          <div class="animal-layer" id="animalLayer"></div>
+          <div class="problem" id="problem">
+            <span class="operand" id="operandA">7</span>
+            <span class="op">×</span>
+            <span class="operand" id="operandB">8</span>
+            <span class="op eq">=</span>
+          </div>
+          <div class="answer" id="answer" aria-live="polite"></div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+        <div class="numpad" id="numpad">
+          <button class="key" data-key="1">1</button>
+          <button class="key" data-key="2">2</button>
+          <button class="key" data-key="3">3</button>
+          <button class="key" data-key="4">4</button>
+          <button class="key" data-key="5">5</button>
+          <button class="key" data-key="6">6</button>
+          <button class="key" data-key="7">7</button>
+          <button class="key" data-key="8">8</button>
+          <button class="key" data-key="9">9</button>
+          <span class="spacer"></span>
+          <button class="key" data-key="0">0</button>
+          <button class="key util" data-key="back" aria-label="Slett siste siffer">⌫</button>
+        </div>
+      </div>
+
+      <!-- COMPLETE SCREEN -->
+      <div class="screen" id="completeScreen" hidden>
+        <div class="center-card">
+          <div class="confetti-layer" id="confetti"></div>
+          <div class="hero-icon done" id="doneIcon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div>
+            <div class="hero-title" id="doneTitle">Godt jobbet!</div>
+            <div class="hero-sub" id="doneSub"></div>
+          </div>
+          <div class="summary" id="summary"></div>
+          <button class="primary-btn" id="restartBtn">Ny økt</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- -------- DASHBOARD VIEW -------- -->
+    <section class="view dashboard" id="dashboardView" hidden>
+      <h2 class="dash-title">Statistikk</h2>
+
+      <div>
+        <div class="section-label" id="statsSectionLabel">Siste økter</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Besvart</div>
+            <div class="stat-value" id="statAnswered">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Riktig</div>
+            <div class="stat-value" id="statRate">–</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Median svartid</div>
+            <div class="stat-value" id="statMedian">–</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Beste rekke</div>
+            <div class="stat-value" id="statMaxStreak">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Heatmap</div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="time" role="tab">Svartid</button>
+          <button class="tab" data-tab="accuracy" role="tab">Treffsikkerhet</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="heatmap-wrap">
+          <div class="heatmap" id="heatmap" role="grid"></div>
+          <div class="hm-legend" id="legend">
+            <span id="legendLo">raskere</span>
+            <span class="hm-gradient time" id="legendBar"></span>
+            <span id="legendHi">tregere</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Innstillinger</div>
+        <div class="settings">
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Gangetabeller</div>
+              <div class="setting-desc">Område (standard 1–10)</div>
+            </div>
+            <div class="range-inputs">
+              <input type="number" min="1" max="12" class="num-input" id="rangeMin" value="1" inputmode="numeric">
+              <span>–</span>
+              <input type="number" min="1" max="12" class="num-input" id="rangeMax" value="10" inputmode="numeric">
+            </div>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Oppgaver per økt</div>
+              <div class="setting-desc">Standard 10</div>
+            </div>
+            <input type="number" min="1" max="50" class="num-input" id="sessionSize" value="10" inputmode="numeric">
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Vindu for statistikk</div>
+              <div class="setting-desc">Antall siste økter og svar per oppgave (standard 7)</div>
+            </div>
+            <input type="number" min="3" max="20" class="num-input" id="statsWindow" value="7" inputmode="numeric">
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Mørk modus</div>
+              <div class="setting-desc">Tilpasses systemet om du ikke velger</div>
+            </div>
+            <button class="toggle" id="themeToggle" aria-pressed="false" aria-label="Mørk modus av/på"></button>
+          </div>
+        </div>
+      </div>
+
+      <button class="reset-btn" id="resetBtn">Nullstill all statistikk</button>
+
+      <div class="data-tools">
+        <button class="link-btn" id="exportBtn" title="Last ned statistikk som CSV">Eksporter data</button>
+        <span class="link-divider"></span>
+        <button class="link-btn" id="importBtn" title="Last inn statistikk fra CSV-fil">Importer data</button>
+        <input type="file" id="importFile" accept=".csv,text/csv" hidden>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   GANGETRENER — adaptiv gangetabelltrening
+   Alt lagres i localStorage. Ingen backend.
+   ============================================================ */
+
+(() => {
+  'use strict';
+
+  // ---------- Konstanter ----------
+  const STORAGE_KEY = 'gangetrener_v2';
+  const LEGACY_KEY  = 'gangetrener_v1';
+  const RECENT_WINDOW = 5;
+  const MAX_RECENT = 20;
+  const GOOD_TIME_MS = 1200;
+  const SLOW_TIME_MS = 5000;
+  const MAX_AGE_MS = 30 * 60 * 1000;
+  const CORRECT_ADVANCE_MS = 900;
+  const WRONG_REVEAL_MS = 1500;
+  const AFTER_CORRECTION_MS = 550;
+  const ANIMAL_THRESHOLD_MS = 2000; // Cute-dyr-belønning under dette
+
+  // En fast liste med søte dyr. Hvert unike svar (produkt) får samme dyr hver gang.
+  const ANIMALS = [
+    '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯',
+    '🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤','🦆',
+    '🦉','🦇','🐺','🐴','🦄','🐝','🦋','🐌','🐞','🐢',
+    '🐍','🦎','🦖','🐙','🦐','🦞','🐡','🐠','🐬','🐳',
+    '🦈','🐊','🦓','🦍','🐘','🦛','🦏','🐪','🦒','🦘',
+    '🐑','🦙','🐐','🦌','🐕','🐈','🦃','🦚','🦜','🦢',
+    '🦩','🕊️'
+  ];
+  // Produkt-verdi -> dyr. 1 -> ANIMALS[0], 2 -> ANIMALS[1] ... deterministisk.
+  function animalForProduct(p) {
+    const idx = ((p - 1) % ANIMALS.length + ANIMALS.length) % ANIMALS.length;
+    return ANIMALS[idx];
+  }
+
+  // ---------- State ----------
+  const state = {
+    stats: {},
+    sessionHistory: [],    // Fullførte økter, nyeste sist
+    session: {
+      phase: 'ready',      // 'ready' | 'playing' | 'complete'
+      answered: 0,
+      correct: 0,
+      times: [],
+      streak: 0,
+      maxStreak: 0,
+      target: 10,
+      dotStates: []
+    },
+    settings: {
+      rangeMin: 1,
+      rangeMax: 10,
+      sessionSize: 10,
+      statsWindow: 7,
+      theme: null
+    },
+    current: null,
+    lastKey: null,
+    locked: false,
+    dashTab: 'time'
+  };
+
+  // ---------- Hjelpere ----------
+  const keyOf = (a, b) => `${a}_${b}`;
+  const $ = sel => document.querySelector(sel);
+
+  function clampRange() {
+    let { rangeMin, rangeMax } = state.settings;
+    rangeMin = Math.max(1, Math.min(12, rangeMin|0));
+    rangeMax = Math.max(1, Math.min(12, rangeMax|0));
+    if (rangeMin > rangeMax) [rangeMin, rangeMax] = [rangeMax, rangeMin];
+    state.settings.rangeMin = rangeMin;
+    state.settings.rangeMax = rangeMax;
+    return { lo: rangeMin, hi: rangeMax };
+  }
+  function clampSettings() {
+    state.settings.sessionSize = Math.max(1, Math.min(50, state.settings.sessionSize|0 || 10));
+    state.settings.statsWindow = Math.max(3, Math.min(20, state.settings.statsWindow|0 || 7));
+    clampRange();
+  }
+  function median(arr) {
+    if (!arr.length) return null;
+    const s = [...arr].sort((a,b) => a-b);
+    const n = s.length;
+    return n % 2 ? s[(n-1)/2] : (s[n/2-1] + s[n/2]) / 2;
+  }
+
+  // ---------- Persistens ----------
+  function load() {
+    let loaded = false;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.stats) state.stats = d.stats;
+        if (Array.isArray(d.sessionHistory)) state.sessionHistory = d.sessionHistory;
+        if (d.settings) Object.assign(state.settings, d.settings);
+        loaded = true;
+      }
+    } catch (e) { console.warn('Kunne ikke laste:', e); }
+    // Bakoverkompatibilitet fra v1
+    if (!loaded) {
+      try {
+        const rawOld = localStorage.getItem(LEGACY_KEY);
+        if (rawOld) {
+          const d = JSON.parse(rawOld);
+          if (d.stats) state.stats = d.stats;
+          if (d.settings) Object.assign(state.settings, d.settings);
+        }
+      } catch (_) {}
+    }
+    // Migrasjon: feltet het tidligere accuracyWindow
+    if (state.settings.accuracyWindow != null && (state.settings.statsWindow == null || state.settings.statsWindow === 7)) {
+      state.settings.statsWindow = state.settings.accuracyWindow;
+    }
+    delete state.settings.accuracyWindow;
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        stats: state.stats,
+        sessionHistory: state.sessionHistory,
+        settings: state.settings
+      }));
+    } catch (e) { console.warn('Kunne ikke lagre:', e); }
+  }
+
+  // ---------- Oppgave-stats ----------
+  function getPair(a, b) {
+    const k = keyOf(a, b);
+    if (!state.stats[k]) {
+      state.stats[k] = { a, b, attempts: 0, correct: 0, recent: [], bestTime: null, lastSeen: 0 };
+    }
+    return state.stats[k];
+  }
+
+  // ---------- Adaptiv valg ----------
+  function pickNext() {
+    const { lo, hi } = clampRange();
+    const now = Date.now();
+    let candidates = [];
+    for (let a = lo; a <= hi; a++)
+      for (let b = lo; b <= hi; b++)
+        candidates.push({ a, b, key: keyOf(a, b) });
+
+    if (state.lastKey && candidates.length > 1) {
+      candidates = candidates.filter(c => c.key !== state.lastKey);
+    }
+
+    let totalW = 0;
+    for (const c of candidates) {
+      const s = state.stats[c.key];
+      let er, bf, af, rf;
+      if (!s || s.attempts === 0) {
+        er = 0.8; bf = 0.7; af = 0.6; rf = 1.0;
+      } else {
+        const recent = s.recent.slice(-RECENT_WINDOW);
+        const errs = recent.filter(r => !r.correct).length;
+        er = recent.length ? errs / recent.length : 0.4;
+        bf = s.bestTime != null
+          ? Math.min(1, Math.max(0, (s.bestTime - GOOD_TIME_MS) / (SLOW_TIME_MS - GOOD_TIME_MS)))
+          : 0.7;
+        const rc = recent.filter(r => r.correct).map(r => r.time);
+        af = rc.length
+          ? Math.min(1, Math.max(0, (rc.reduce((x,t)=>x+t,0)/rc.length - GOOD_TIME_MS) / (SLOW_TIME_MS - GOOD_TIME_MS)))
+          : 0.6;
+        rf = Math.min(1, (now - (s.lastSeen || 0)) / MAX_AGE_MS);
+      }
+      const w = 1.4*er + 0.8*bf + 0.5*af + 0.6*rf + 0.1;
+      c.w = w; totalW += w;
+    }
+    let r = Math.random() * totalW;
+    for (const c of candidates) { r -= c.w; if (r <= 0) return c; }
+    return candidates[candidates.length - 1];
+  }
+
+  // ---------- Session ----------
+  function startSession() {
+    state.session = {
+      phase: 'playing',
+      answered: 0,
+      correct: 0,
+      times: [],
+      streak: 0,
+      maxStreak: 0,
+      target: state.settings.sessionSize,
+      dotStates: []
+    };
+    updateChips();
+    renderPracticeScreens();
+    newProblem();
+  }
+  function completeSession() {
+    state.session.phase = 'complete';
+    state.current = null;
+    recordSession();
+    renderPracticeScreens();
+    renderCompleteScreen();
+  }
+  function recordSession() {
+    const s = state.session;
+    state.sessionHistory.push({
+      date: Date.now(),
+      target: s.target,
+      answered: s.answered,
+      correct: s.correct,
+      times: s.times.slice(),
+      maxStreak: s.maxStreak
+    });
+    // Behold maks 200 – rikelig selv ved utvidet statistikkvindu
+    const CAP = 200;
+    if (state.sessionHistory.length > CAP) {
+      state.sessionHistory = state.sessionHistory.slice(-CAP);
+    }
+    save();
+  }
+  function resetToReady() {
+    state.session = {
+      phase: 'ready',
+      answered: 0, correct: 0, times: [],
+      streak: 0, maxStreak: 0,
+      target: state.settings.sessionSize,
+      dotStates: []
+    };
+    state.current = null;
+    updateChips();
+    renderReadyScreen();
+    renderPracticeScreens();
+  }
+  function advanceOrComplete() {
+    if (state.session.answered >= state.session.target) completeSession();
+    else newProblem();
+  }
+
+  // ---------- Ny oppgave ----------
+  function newProblem() {
+    const next = pickNext();
+    if (!next) return;
+    const product = next.a * next.b;
+    state.current = {
+      a: next.a, b: next.b, key: next.key,
+      correctAnswer: product,
+      expectedDigits: String(product).length,
+      typed: '',
+      startTime: performance.now(),
+      phase: 'answer',
+      wrongFirst: false
+    };
+    state.locked = false;
+    renderProblem({ animate: true });
+    renderProgress();
+  }
+
+  // ---------- Rendering ----------
+  function renderPracticeScreens() {
+    const p = state.session.phase;
+    $('#readyScreen').hidden    = p !== 'ready';
+    $('#playScreen').hidden     = p !== 'playing';
+    $('#completeScreen').hidden = p !== 'complete';
+  }
+  function renderReadyScreen() {
+    const { rangeMin, rangeMax, sessionSize } = state.settings;
+    $('#readySub').textContent = `${sessionSize} oppgaver, gangetabellene ${rangeMin}–${rangeMax}`;
+    $('#readyPills').innerHTML = `
+      <span class="meta-pill"><strong>${sessionSize}</strong> oppgaver</span>
+      <span class="meta-pill">Tabellene <strong>${rangeMin}–${rangeMax}</strong></span>
+    `;
+  }
+  function renderProblem({ animate = false } = {}) {
+    const c = state.current;
+    $('#operandA').textContent = c.a;
+    $('#operandB').textContent = c.b;
+    renderSlots();
+    setFeedback('');
+    const card = $('#problemCard');
+    card.classList.remove('correct', 'wrong');
+    const prob = $('#problem');
+    prob.classList.remove('fly-in');
+    if (animate) {
+      void prob.offsetWidth;
+      prob.classList.add('fly-in');
+    }
+  }
+  function renderSlots(classOverride = null) {
+    const c = state.current;
+    const container = $('#answer');
+    container.innerHTML = '';
+    const n = c.expectedDigits;
+    for (let i = 0; i < n; i++) {
+      const slot = document.createElement('span');
+      slot.className = 'slot';
+      if (i < c.typed.length) {
+        slot.textContent = c.typed[i];
+        slot.classList.add('filled');
+      } else if (i === c.typed.length && c.phase !== 'locked') {
+        slot.classList.add('active');
+      }
+      if (classOverride) slot.classList.add(classOverride);
+      container.appendChild(slot);
+    }
+  }
+  function renderProgress() {
+    const p = $('#progress');
+    p.innerHTML = '';
+    const { target, answered, dotStates } = state.session;
+    for (let i = 0; i < target; i++) {
+      const d = document.createElement('span');
+      let cls = 'dot';
+      if (i < dotStates.length) cls += ' filled ' + dotStates[i];
+      else if (i === answered) cls += ' current';
+      d.className = cls;
+      p.appendChild(d);
+    }
+  }
+  function setFeedback(html, cls = '') {
+    const f = $('#feedback');
+    f.className = 'feedback ' + cls;
+    f.innerHTML = html;
+  }
+
+  // ---------- Input-håndtering ----------
+  function handleKey(k) {
+    if (state.locked) return;
+    const c = state.current;
+    if (state.session.phase !== 'playing' || !c) return;
+
+    if (k === 'back') {
+      if (c.typed.length > 0 && c.phase !== 'locked') {
+        c.typed = c.typed.slice(0, -1);
+        renderSlots();
+      }
+      return;
+    }
+    if (/^[0-9]$/.test(k)) {
+      if (c.phase === 'locked') return;
+      if (c.typed.length >= c.expectedDigits) return;
+      c.typed += k;
+      renderSlots();
+      if (c.typed.length === c.expectedDigits) evaluate();
+    }
+  }
+
+  function evaluate() {
+    const c = state.current;
+    const typedNum = parseInt(c.typed, 10);
+    const isCorrect = typedNum === c.correctAnswer;
+
+    if (c.phase === 'answer') {
+      const elapsed = performance.now() - c.startTime;
+      const stats = getPair(c.a, c.b);
+      stats.attempts += 1;
+      stats.lastSeen = Date.now();
+      stats.recent.push({ correct: isCorrect, time: elapsed });
+      if (stats.recent.length > MAX_RECENT) stats.recent.shift();
+
+      state.session.answered += 1;
+      state.session.dotStates.push(isCorrect ? 'correct' : 'wrong');
+      if (isCorrect) {
+        stats.correct += 1;
+        if (stats.bestTime == null || elapsed < stats.bestTime) stats.bestTime = elapsed;
+        state.session.correct += 1;
+        state.session.times.push(elapsed);
+        state.session.streak += 1;
+        if (state.session.streak > state.session.maxStreak) state.session.maxStreak = state.session.streak;
+      } else {
+        state.session.streak = 0;
+        c.wrongFirst = true;
+      }
+      state.lastKey = c.key;
+      save();
+      updateChips(isCorrect);
+      renderProgress();
+
+      if (isCorrect) showCorrect(elapsed);
+      else showWrong();
+    } else if (c.phase === 'correcting') {
+      if (isCorrect) {
+        state.locked = true;
+        renderSlots('correct-flash');
+        setFeedback(`<span class="icon">✓</span>`, 'ok');
+        setTimeout(advanceOrComplete, AFTER_CORRECTION_MS);
+      } else {
+        c.typed = '';
+        renderSlots();
+        const ans = $('#answer');
+        ans.classList.remove('shake');
+        void ans.offsetWidth;
+        ans.classList.add('shake');
+      }
+    }
+  }
+
+  function showCorrect(ms) {
+    state.locked = true;
+    renderSlots('correct-flash');
+    $('#problemCard').classList.add('correct');
+    const seconds = (ms / 1000).toFixed(ms < 10000 ? 1 : 0);
+    setFeedback(`<span class="icon">✓</span><span class="time">${seconds} s</span>`, 'ok');
+    spawnSparkles();
+    if (ms < ANIMAL_THRESHOLD_MS) {
+      spawnAnimal(state.current.correctAnswer);
+    }
+    setTimeout(advanceOrComplete, CORRECT_ADVANCE_MS);
+  }
+
+  function showWrong() {
+    state.locked = true;
+    const c = state.current;
+    renderSlots('error-flash');
+    $('#problemCard').classList.add('wrong');
+    setFeedback(`<span class="icon">✗</span><span>Fasit: <strong style="color:var(--error);font-family:Manrope,system-ui,sans-serif;font-weight:700;font-feature-settings:'tnum' 1, 'lnum' 1, 'zero' 1">${c.correctAnswer}</strong></span>`, 'err');
+    setTimeout(() => {
+      c.typed = '';
+      c.phase = 'correcting';
+      state.locked = false;
+      $('#problemCard').classList.remove('wrong');
+      renderSlots();
+      setFeedback(`<span class="prompt">Skriv inn <strong>${c.correctAnswer}</strong> for å fortsette</span>`);
+    }, WRONG_REVEAL_MS);
+  }
+
+  // ---------- Sparkles ----------
+  function spawnSparkles() {
+    const layer = $('#sparkles');
+    layer.innerHTML = '';
+    const rect = layer.getBoundingClientRect();
+    const cx = rect.width / 2, cy = rect.height * 0.55;
+    const count = 10;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('span');
+      s.className = 'sparkle';
+      const angle = (Math.PI*2*i)/count + (Math.random()*0.4 - 0.2);
+      const dist = 60 + Math.random()*80;
+      const dx = Math.cos(angle)*dist;
+      const dy = Math.sin(angle)*dist*0.7;
+      s.style.left = cx+'px'; s.style.top = cy+'px';
+      s.animate([
+        { transform: 'translate(-50%,-50%) scale(0.4)', opacity: 0 },
+        { opacity: 1, offset: 0.2 },
+        { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1)`, opacity: 0 }
+      ], { duration: 700+Math.random()*200, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' });
+      layer.appendChild(s);
+    }
+    setTimeout(() => layer.innerHTML = '', 1000);
+  }
+
+  // ---------- Cute animal (rask-svar-belønning) ----------
+  function spawnAnimal(product) {
+    const layer = $('#animalLayer');
+    if (!layer) return;
+    layer.innerHTML = ''; // Fjern eventuell gjenværende fra forrige
+    const span = document.createElement('span');
+    span.className = 'animal';
+    span.textContent = animalForProduct(product);
+    span.setAttribute('aria-hidden', 'true');
+    layer.appendChild(span);
+    // Ryd opp etter animasjonen (1.6s) – litt slack for sikkerhets skyld
+    setTimeout(() => {
+      if (span.parentNode) span.parentNode.removeChild(span);
+    }, 1800);
+  }
+
+  // ---------- Konfetti ----------
+  function spawnConfetti() {
+    const layer = $('#confetti');
+    layer.innerHTML = '';
+    const colors = ['#C85C45', '#5F8C6C', '#E4B44A', '#6B92B9', '#B87D56'];
+    const count = 36;
+    const h = layer.clientHeight || 400;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      p.className = 'confetto';
+      p.style.background = colors[i % colors.length];
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.width = (5 + Math.random()*5) + 'px';
+      p.style.height = (8 + Math.random()*8) + 'px';
+      const rot = Math.random()*360;
+      const drift = (Math.random() - 0.5) * 180;
+      const delay = Math.random() * 400;
+      const dur = 1400 + Math.random()*1000;
+      p.animate([
+        { transform: `translate(0,-20px) rotate(${rot}deg)`, opacity: 0 },
+        { opacity: 1, offset: 0.08 },
+        { opacity: 1, offset: 0.7 },
+        { transform: `translate(${drift}px, ${h+40}px) rotate(${rot + 720 + Math.random()*360}deg)`, opacity: 0 }
+      ], { duration: dur, delay, easing: 'cubic-bezier(.2,.5,.5,1)', fill: 'forwards' });
+      layer.appendChild(p);
+    }
+    setTimeout(() => layer.innerHTML = '', 3000);
+  }
+
+  // ---------- Complete screen ----------
+  function renderCompleteScreen() {
+    const s = state.session;
+    const rate = s.target ? Math.round(100 * s.correct / s.target) : 0;
+    const med = median(s.times);
+
+    let title = 'Godt jobbet!';
+    let sub   = '';
+    if (rate === 100)    { title = 'Perfekt økt!';    sub = 'Alle rett på første forsøk.'; }
+    else if (rate >= 90) { title = 'Nesten perfekt!'; sub = 'Bare en liten skivebom.'; }
+    else if (rate >= 70) { title = 'Godt jobbet!';    sub = 'Solid innsats.'; }
+    else if (rate >= 50) { title = 'Bra øving!';      sub = 'Du er på god vei.'; }
+    else                 { title = 'Fin trening!';    sub = 'Hver økt gjør deg bedre.'; }
+
+    $('#doneTitle').textContent = title;
+    $('#doneSub').textContent   = sub;
+
+    const summary = $('#summary');
+    summary.innerHTML = '';
+    const rows = [
+      { label: 'Riktig på første forsøk', value: `${s.correct} / ${s.target}`, accent: true },
+      { label: 'Andel riktig',            value: `${rate} %` },
+      { label: 'Median svartid',          value: med != null ? (med/1000).toFixed(1) + ' s' : '–' },
+      { label: 'Lengste rekke',           value: String(s.maxStreak) }
+    ];
+    for (const r of rows) {
+      const row = document.createElement('div');
+      row.className = 'summary-row';
+      row.innerHTML = `<span class="summary-label">${r.label}</span><span class="summary-value${r.accent?' accent':''}">${r.value}</span>`;
+      summary.appendChild(row);
+    }
+
+    // Trigg hero-animasjon på nytt
+    const hero = $('#doneIcon');
+    hero.style.animation = 'none';
+    void hero.offsetWidth;
+    hero.style.animation = '';
+
+    if (rate >= 60) setTimeout(spawnConfetti, 200);
+  }
+
+  // ---------- UI: chips ----------
+  function updateChips(pulseGood = false) {
+    const ans = $('#chipAnswered'), str = $('#chipStreak');
+    ans.querySelector('.chip-num').textContent = state.session.answered;
+    str.querySelector('.chip-num').textContent = state.session.streak;
+    if (pulseGood) {
+      ans.classList.remove('pulse'); void ans.offsetWidth; ans.classList.add('pulse');
+      if (state.session.streak > 0) {
+        str.classList.remove('pulse'); void str.offsetWidth; str.classList.add('pulse');
+      }
+    }
+  }
+
+  // ---------- Dashboard ----------
+  function renderDashboard() {
+    const N = state.settings.statsWindow;
+    const recent = state.sessionHistory.slice(-N);
+
+    const label = $('#statsSectionLabel');
+    if (recent.length === 0) {
+      label.textContent = 'Siste økter';
+    } else {
+      label.textContent = `Siste ${recent.length} økt${recent.length === 1 ? '' : 'er'}`;
+    }
+
+    const totalAnswered = recent.reduce((a, r) => a + (r.answered || 0), 0);
+    const totalCorrect  = recent.reduce((a, r) => a + (r.correct  || 0), 0);
+    const allTimes      = recent.flatMap(r => r.times || []);
+    const bestStreak    = recent.length ? Math.max(...recent.map(r => r.maxStreak || 0)) : 0;
+
+    $('#statAnswered').textContent = totalAnswered;
+    $('#statRate').textContent     = totalAnswered ? Math.round(100 * totalCorrect / totalAnswered) + ' %' : '–';
+    const m = median(allTimes);
+    $('#statMedian').textContent   = m != null ? (m/1000).toFixed(1) + ' s' : '–';
+    $('#statMaxStreak').textContent = bestStreak;
+
+    $('#statRate').classList.toggle('muted', totalAnswered === 0);
+    $('#statMedian').classList.toggle('muted', m == null);
+
+    renderHeatmap();
+
+    $('#rangeMin').value     = state.settings.rangeMin;
+    $('#rangeMax').value     = state.settings.rangeMax;
+    $('#sessionSize').value  = state.settings.sessionSize;
+    $('#statsWindow').value  = state.settings.statsWindow;
+
+    const dark = document.documentElement.dataset.theme === 'dark';
+    $('#themeToggle').setAttribute('aria-pressed', String(dark));
+  }
+
+  function timeToColor(ms) {
+    const t = Math.max(0, Math.min(1, (ms - 800) / (SLOW_TIME_MS - 800)));
+    const hue = 140 - t*135;
+    const sat = 45 + t*20;
+    const lig = 58 - t*6;
+    return `hsl(${hue} ${sat}% ${lig}%)`;
+  }
+  function accuracyToColor(frac) {
+    const hue = frac * 140;    // 0=rød, 1=grønn
+    const sat = 52;
+    const lig = 55;
+    return `hsl(${hue} ${sat}% ${lig}%)`;
+  }
+
+  function renderHeatmap() {
+    const hm = $('#heatmap');
+    hm.innerHTML = '';
+    const { lo, hi } = clampRange();
+    const W = state.settings.statsWindow;
+    const mode = state.dashTab;
+
+    hm.style.gridTemplateColumns = 'repeat(11, 1fr)';
+
+    const corner = document.createElement('div');
+    corner.className = 'hm-cell hm-corner';
+    corner.textContent = '×';
+    hm.appendChild(corner);
+    for (let b = 1; b <= 10; b++) {
+      const h = document.createElement('div');
+      h.className = 'hm-cell hm-head';
+      h.textContent = b;
+      hm.appendChild(h);
+    }
+    for (let a = 1; a <= 10; a++) {
+      const h = document.createElement('div');
+      h.className = 'hm-cell hm-head';
+      h.textContent = a;
+      hm.appendChild(h);
+      for (let b = 1; b <= 10; b++) {
+        const cell = document.createElement('div');
+        cell.className = 'hm-cell';
+        const s = state.stats[keyOf(a, b)];
+        const inRange = (a >= lo && a <= hi && b >= lo && b <= hi);
+
+        if (mode === 'time') {
+          if (s && s.bestTime != null) {
+            cell.classList.add('data');
+            cell.style.background = timeToColor(s.bestTime);
+            cell.textContent = a * b;
+            cell.title = `${a} × ${b} = ${a*b}\nBeste: ${(s.bestTime/1000).toFixed(2)} s\n${s.correct}/${s.attempts} riktig totalt`;
+          } else {
+            cell.textContent = a * b;
+            cell.style.opacity = inRange ? 1 : 0.45;
+          }
+        } else {
+          if (s && s.recent && s.recent.length > 0) {
+            const window = s.recent.slice(-W);
+            const correctCount = window.filter(r => r.correct).length;
+            const frac = correctCount / window.length;
+            cell.classList.add('data');
+            cell.style.background = accuracyToColor(frac);
+            cell.textContent = a * b;
+            cell.title = `${a} × ${b} = ${a*b}\n${correctCount} av ${window.length} riktig${window.length < W ? ' (av '+W+' mulige)' : ''}`;
+          } else {
+            cell.textContent = a * b;
+            cell.style.opacity = inRange ? 1 : 0.45;
+          }
+        }
+        hm.appendChild(cell);
+      }
+    }
+
+    const bar = $('#legendBar');
+    const lo_ = $('#legendLo'), hi_ = $('#legendHi');
+    if (mode === 'time') {
+      bar.className = 'hm-gradient time';
+      lo_.textContent = 'raskere'; hi_.textContent = 'tregere';
+    } else {
+      bar.className = 'hm-gradient accuracy';
+      lo_.textContent = 'færre riktige'; hi_.textContent = 'flere riktige';
+    }
+  }
+
+  function switchDashTab(tab) {
+    state.dashTab = tab;
+    document.querySelectorAll('.tab').forEach(el => {
+      el.classList.toggle('active', el.dataset.tab === tab);
+    });
+    renderHeatmap();
+  }
+
+  // ---------- Tema ----------
+  function applyTheme(theme) {
+    state.settings.theme = theme;
+    let effective;
+    if (theme === 'light' || theme === 'dark') effective = theme;
+    else effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = effective;
+    save();
+    const toggle = $('#themeToggle');
+    if (toggle) toggle.setAttribute('aria-pressed', String(effective === 'dark'));
+  }
+
+  // ---------- CSV eksport/import ----------
+  // Format: a,b,attempts,correct,bestTime,lastSeen,recent
+  // "recent" er pipe-separert "korrekt:tid" -> "1:812|0:2100|1:920"
+  function exportCSV() {
+    const lines = ['a,b,attempts,correct,bestTime,lastSeen,recent'];
+    const keys = Object.keys(state.stats).sort((x, y) => {
+      const sx = state.stats[x], sy = state.stats[y];
+      return sx.a - sy.a || sx.b - sy.b;
+    });
+    for (const k of keys) {
+      const s = state.stats[k];
+      if (!s || s.attempts === 0) continue;
+      const recent = (s.recent || [])
+        .map(r => `${r.correct ? 1 : 0}:${Math.round(r.time)}`)
+        .join('|');
+      lines.push([
+        s.a,
+        s.b,
+        s.attempts || 0,
+        s.correct || 0,
+        s.bestTime != null ? s.bestTime.toFixed(1) : '',
+        s.lastSeen || 0,
+        recent
+      ].join(','));
+    }
+    const csv = lines.join('\n') + '\n';
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    a.href = url;
+    a.download = `gangetrener-${ymd}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  }
+
+  function splitCsvLine(line) {
+    const out = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+        else inQ = !inQ;
+      } else if (ch === ',' && !inQ) {
+        out.push(cur); cur = '';
+      } else {
+        cur += ch;
+      }
+    }
+    out.push(cur);
+    return out.map(s => s.trim());
+  }
+
+  function importCSV(file) {
+    const reader = new FileReader();
+    reader.onerror = () => alert('Kunne ikke lese filen.');
+    reader.onload = (e) => {
+      try {
+        const text = String(e.target.result || '');
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length === 0) throw new Error('Tom fil.');
+        const header = splitCsvLine(lines[0]);
+        const expected = ['a','b','attempts','correct','bestTime','lastSeen','recent'];
+        for (let i = 0; i < expected.length; i++) {
+          if (header[i] !== expected[i]) {
+            throw new Error('Filen har ikke riktig format (forventet kolonner: ' + expected.join(', ') + ').');
+          }
+        }
+        const newStats = {};
+        let count = 0, skipped = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const cols = splitCsvLine(lines[i]);
+          if (cols.length < 6) { skipped++; continue; }
+          const a = parseInt(cols[0], 10);
+          const b = parseInt(cols[1], 10);
+          if (!Number.isFinite(a) || !Number.isFinite(b) || a < 1 || b < 1 || a > 12 || b > 12) {
+            skipped++; continue;
+          }
+          const attempts = Math.max(0, parseInt(cols[2], 10) || 0);
+          const correct  = Math.max(0, parseInt(cols[3], 10) || 0);
+          const bestTime = cols[4] !== '' && cols[4] != null ? parseFloat(cols[4]) : null;
+          const lastSeen = parseInt(cols[5], 10) || 0;
+          const recent = (cols[6] || '').split('|').filter(Boolean).map(pair => {
+            const [c, t] = pair.split(':');
+            return { correct: c === '1', time: parseFloat(t) || 0 };
+          }).slice(-MAX_RECENT);
+          newStats[keyOf(a, b)] = {
+            a, b,
+            attempts, correct,
+            bestTime: Number.isFinite(bestTime) ? bestTime : null,
+            lastSeen: Number.isFinite(lastSeen) ? lastSeen : 0,
+            recent
+          };
+          count++;
+        }
+        if (count === 0) throw new Error('Fant ingen gyldige rader å importere.');
+        const msg = `Importere statistikk for ${count} oppgave${count === 1 ? '' : 'r'}?` +
+                    (skipped > 0 ? `\n(${skipped} rad${skipped === 1 ? '' : 'er'} ble hoppet over.)` : '') +
+                    `\n\nDette erstatter all nåværende lagret statistikk.`;
+        if (!confirm(msg)) return;
+        state.stats = newStats;
+        state.lastKey = null;
+        save();
+        renderDashboard();
+      } catch (err) {
+        alert('Import feilet: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ---------- Navigasjon ----------
+  function showView(name) {
+    $('#practiceView').hidden  = (name !== 'practice');
+    $('#dashboardView').hidden = (name !== 'dashboard');
+    if (name === 'dashboard') renderDashboard();
+    const btn = $('#menuBtn');
+    btn.innerHTML = name === 'dashboard'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>';
+  }
+
+  // ---------- Events ----------
+  function wireEvents() {
+    document.querySelectorAll('.key').forEach(btn => {
+      btn.addEventListener('click', () => handleKey(btn.dataset.key));
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+
+      if (state.session.phase === 'ready' && (e.key === 'Enter' || e.key === ' ')) {
+        startSession(); e.preventDefault(); return;
+      }
+      if (state.session.phase === 'complete' && (e.key === 'Enter' || e.key === ' ')) {
+        resetToReady(); e.preventDefault(); return;
+      }
+      if (e.key >= '0' && e.key <= '9') { handleKey(e.key); e.preventDefault(); }
+      else if (e.key === 'Backspace')    { handleKey('back'); e.preventDefault(); }
+    });
+
+    $('#menuBtn').addEventListener('click', () => {
+      const onDash = !$('#dashboardView').hidden;
+      showView(onDash ? 'practice' : 'dashboard');
+    });
+    $('#themeBtn').addEventListener('click', () => {
+      const cur = document.documentElement.dataset.theme;
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+    $('#themeToggle').addEventListener('click', () => {
+      const pressed = $('#themeToggle').getAttribute('aria-pressed') === 'true';
+      applyTheme(pressed ? 'light' : 'dark');
+    });
+
+    $('#startBtn').addEventListener('click', startSession);
+    $('#restartBtn').addEventListener('click', resetToReady);
+
+    document.querySelectorAll('.tab').forEach(el => {
+      el.addEventListener('click', () => switchDashTab(el.dataset.tab));
+    });
+
+    const commitRange = () => {
+      const a = parseInt($('#rangeMin').value, 10);
+      const b = parseInt($('#rangeMax').value, 10);
+      if (!isNaN(a)) state.settings.rangeMin = a;
+      if (!isNaN(b)) state.settings.rangeMax = b;
+      clampRange();
+      $('#rangeMin').value = state.settings.rangeMin;
+      $('#rangeMax').value = state.settings.rangeMax;
+      save();
+      if (state.session.phase === 'ready') renderReadyScreen();
+      renderHeatmap();
+    };
+    $('#rangeMin').addEventListener('change', commitRange);
+    $('#rangeMax').addEventListener('change', commitRange);
+    $('#rangeMin').addEventListener('blur', commitRange);
+    $('#rangeMax').addEventListener('blur', commitRange);
+
+    const commitSessionSize = () => {
+      const v = parseInt($('#sessionSize').value, 10);
+      if (!isNaN(v)) state.settings.sessionSize = v;
+      clampSettings();
+      $('#sessionSize').value = state.settings.sessionSize;
+      save();
+      if (state.session.phase === 'ready') {
+        state.session.target = state.settings.sessionSize;
+        renderReadyScreen();
+      }
+    };
+    $('#sessionSize').addEventListener('change', commitSessionSize);
+    $('#sessionSize').addEventListener('blur', commitSessionSize);
+
+    const commitStatsWindow = () => {
+      const v = parseInt($('#statsWindow').value, 10);
+      if (!isNaN(v)) state.settings.statsWindow = v;
+      clampSettings();
+      $('#statsWindow').value = state.settings.statsWindow;
+      save();
+      // Vinduet påvirker både øktstatistikk og treffsikkerhets-heatmap
+      if (!$('#dashboardView').hidden) renderDashboard();
+    };
+    $('#statsWindow').addEventListener('change', commitStatsWindow);
+    $('#statsWindow').addEventListener('blur', commitStatsWindow);
+
+    $('#resetBtn').addEventListener('click', () => {
+      if (!confirm('Slette all lagret statistikk? Denne handlingen kan ikke angres.')) return;
+      state.stats = {};
+      state.sessionHistory = [];
+      state.lastKey = null;
+      save();
+      resetToReady();
+      renderDashboard();
+    });
+
+    // Eksport / import
+    $('#exportBtn').addEventListener('click', exportCSV);
+    $('#importBtn').addEventListener('click', () => $('#importFile').click());
+    $('#importFile').addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) importCSV(f);
+      // Nullstill input slik at samme fil kan velges igjen senere
+      e.target.value = '';
+    });
+
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener?.('change', () => {
+      if (state.settings.theme == null) applyTheme(null);
+    });
+  }
+
+  // ---------- Init ----------
+  function init() {
+    load();
+    clampSettings();
+    applyTheme(state.settings.theme);
+    wireEvents();
+    updateChips();
+    state.session.target = state.settings.sessionSize;
+    renderReadyScreen();
+    renderPracticeScreens();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
