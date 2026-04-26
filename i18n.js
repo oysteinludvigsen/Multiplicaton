@@ -5,6 +5,19 @@
    ============================================================ */
 window.MULTIPLICATION_TRANSLATIONS = {};
 
+window.MULTIPLICATION_LANG_FLAGS = {
+  en: '🇬🇧',
+  no: '🇳🇴',
+  es: '🇪🇸',
+  zh: '🇨🇳',
+  hi: '🇮🇳',
+  ar: '🇸🇦',
+  pt: '🇵🇹',
+  ru: '🇷🇺',
+  fr: '🇫🇷',
+  de: '🇩🇪'
+};
+
 window.MULTIPLICATION_TRANSLATIONS.en = {
   pageTitle: 'Multiplication Trainer',
   pageTitleZoo: 'Multiplication Trainer Zoo',

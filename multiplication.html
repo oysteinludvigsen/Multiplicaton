@@ -107,6 +107,45 @@ input { font-family: inherit; color: inherit; }
    TOP BAR
    ============================================================ */
 .topbar { display: flex; align-items: center; gap: 8px; padding: 2px 2px; }
+
+/* Subtle global language picker (upper left) */
+.lang-picker { position: relative; flex-shrink: 0; }
+.lang-trigger {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 36px; padding: 0 8px;
+  background: transparent; border: 0; cursor: pointer;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font: inherit; line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.lang-trigger:hover { background: var(--surface-2); color: var(--text); }
+.lang-trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.lang-trigger .flag { font-size: 18px; line-height: 1; }
+.lang-trigger .chev { font-size: 9px; opacity: 0.5; }
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-start: 0;
+  list-style: none; margin: 0; padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  min-width: 170px; max-height: 70vh; overflow-y: auto;
+  z-index: 100;
+}
+.lang-menu[hidden] { display: none; }
+.lang-option {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 8px 10px;
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--text); font: inherit; text-align: start;
+  border-radius: 8px;
+}
+.lang-option:hover { background: var(--surface-2); }
+.lang-option[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.lang-option .flag { font-size: 18px; line-height: 1; flex-shrink: 0; }
 .icon-btn {
   width: 44px; height: 44px;
   border-radius: var(--radius-sm);
@@ -780,6 +819,13 @@ input { font-family: inherit; color: inherit; }
 
   <!-- ============== TOP BAR ============== -->
   <header class="topbar">
+    <div class="lang-picker">
+      <button class="lang-trigger" id="langTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">
+        <span class="flag" id="langCurrentFlag" aria-hidden="true">🌐</span>
+        <span class="chev" aria-hidden="true">▾</span>
+      </button>
+      <ul class="lang-menu" id="langMenu" role="listbox" hidden></ul>
+    </div>
     <button class="icon-btn" id="menuBtn" aria-label="Statistikk" data-i18n-aria="menuBtnAria">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="12" width="4" height="8" rx="1"/>
@@ -922,13 +968,6 @@ input { font-family: inherit; color: inherit; }
         <div class="settings">
           <div class="setting-row">
             <div>
-              <div class="setting-label" data-i18n="languageLabel">Språk</div>
-              <div class="setting-desc" data-i18n="languageDesc">Vises automatisk fra nettleseren</div>
-            </div>
-            <select class="num-input" id="languageSelect" style="width:auto;min-width:120px"></select>
-          </div>
-          <div class="setting-row">
-            <div>
               <div class="setting-label" data-i18n="tablesLabel">Gangetabeller</div>
               <div class="setting-desc" data-i18n="tablesDesc">Område (standard 1–10)</div>
             </div>
@@ -993,6 +1032,7 @@ input { font-family: inherit; color: inherit; }
     en: 'English', no: 'Norsk', es: 'Español', zh: '中文', hi: 'हिन्दी',
     ar: 'العربية', pt: 'Português', ru: 'Русский', fr: 'Français', de: 'Deutsch'
   };
+  const LANG_FLAGS = (typeof window !== 'undefined' && window.MULTIPLICATION_LANG_FLAGS) || {};
   const TRANSLATIONS = (typeof window !== 'undefined' && window.MULTIPLICATION_TRANSLATIONS) || {};
   let currentLang = FALLBACK_LANG;
 
@@ -1048,19 +1088,75 @@ input { font-family: inherit; color: inherit; }
     currentLang = lang;
     try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch (_) {}
     applyTranslations();
+    updateLangTrigger();
     refreshDynamicTexts();
   }
-  function populateLanguageSelect() {
-    const sel = document.querySelector('#languageSelect');
-    if (!sel) return;
-    sel.innerHTML = '';
+  function buildLangMenu() {
+    const menu = document.querySelector('#langMenu');
+    if (!menu) return;
+    menu.innerHTML = '';
     for (const code of SUPPORTED_LANGS) {
-      const opt = document.createElement('option');
-      opt.value = code;
-      opt.textContent = LANG_LABELS[code];
-      sel.appendChild(opt);
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lang-option';
+      btn.setAttribute('role', 'option');
+      btn.dataset.lang = code;
+      const flag = document.createElement('span');
+      flag.className = 'flag';
+      flag.setAttribute('aria-hidden', 'true');
+      flag.textContent = LANG_FLAGS[code] || '';
+      const label = document.createElement('span');
+      label.textContent = LANG_LABELS[code] || code;
+      btn.appendChild(flag);
+      btn.appendChild(label);
+      btn.addEventListener('click', () => {
+        setLanguage(code);
+        closeLangMenu();
+      });
+      li.appendChild(btn);
+      menu.appendChild(li);
     }
-    sel.value = currentLang;
+  }
+  function openLangMenu() {
+    const menu = document.querySelector('#langMenu');
+    const trigger = document.querySelector('#langTrigger');
+    if (!menu || !trigger) return;
+    menu.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+  function closeLangMenu() {
+    const menu = document.querySelector('#langMenu');
+    const trigger = document.querySelector('#langTrigger');
+    if (!menu || !trigger) return;
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+  function updateLangTrigger() {
+    const flag = document.querySelector('#langCurrentFlag');
+    const trigger = document.querySelector('#langTrigger');
+    if (flag) flag.textContent = LANG_FLAGS[currentLang] || '🌐';
+    if (trigger) trigger.setAttribute('aria-label', t('languageLabel') + ': ' + (LANG_LABELS[currentLang] || currentLang));
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.setAttribute('aria-selected', opt.dataset.lang === currentLang ? 'true' : 'false');
+    });
+  }
+  function wireLangPicker() {
+    const trigger = document.querySelector('#langTrigger');
+    const menu = document.querySelector('#langMenu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.hidden ? openLangMenu() : closeLangMenu();
+    });
+    document.addEventListener('click', (e) => {
+      if (!menu.hidden && !menu.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+        closeLangMenu();
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) closeLangMenu();
+    });
   }
 
   // ---------- Konstanter ----------
@@ -1955,8 +2051,6 @@ input { font-family: inherit; color: inherit; }
     $('#statsWindow').addEventListener('change', commitStatsWindow);
     $('#statsWindow').addEventListener('blur', commitStatsWindow);
 
-    $('#languageSelect').addEventListener('change', (e) => setLanguage(e.target.value));
-
     $('#resetBtn').addEventListener('click', () => {
       if (!confirm(t('resetConfirm'))) return;
       state.stats = {};
@@ -1990,8 +2084,10 @@ input { font-family: inherit; color: inherit; }
     currentLang = detectBrowserLanguage();
     applyTheme(state.settings.theme);
     wireEvents();
-    populateLanguageSelect();
+    buildLangMenu();
+    wireLangPicker();
     applyTranslations();
+    updateLangTrigger();
     updateChips();
     state.session.target = state.settings.sessionSize;
     renderReadyScreen();
