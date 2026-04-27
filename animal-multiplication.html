@@ -122,7 +122,8 @@ input { font-family: inherit; color: inherit; }
 }
 .lang-trigger:hover { background: var(--surface-2); color: var(--text); }
 .lang-trigger:focus-visible { outline: 1px solid var(--border); outline-offset: 2px; }
-.lang-trigger .flag { font-size: 18px; line-height: 1; }
+.lang-trigger .flag { font-size: 18px; line-height: 1; filter: grayscale(1); opacity: 0.85; }
+.lang-trigger:hover .flag, .lang-trigger:focus-visible .flag, .lang-trigger[aria-expanded="true"] .flag { filter: none; opacity: 1; }
 .lang-trigger .chev { font-size: 9px; opacity: 0.5; }
 .lang-menu {
   position: absolute;
